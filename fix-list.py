@@ -10,6 +10,7 @@ def checkLine(line, cnt):
 		The given string is expected to be a single line with no trailing spaces.
 	"""
 	cnt+=1
+	line=line.strip()
 
 	m = re.match(r'\A(\d+)\.\s[^a-z].*\Z',line)
 
@@ -25,14 +26,24 @@ def checkLine(line, cnt):
 				rest=rest[1:]
 			if(rest[0] == ' '):
 				rest=rest[1:]
-			rest=rest.title() #remove this and replace with rest.capitalize()
+			rest=rest.title() #replace with rest.capitalize() in the future
 			line = p.group(1)+add+rest
 			return checkLine(line, cnt-1)
 	else:
 		n = int(m.group(1))
+		p=re.match(r'\A(\d+)(.*)\Z',line)
+		rest = p.group(2)
 		if(cnt!=n):
-			p=re.match(r'\A(\d+)(.*)\Z',line)
-			line=str(cnt)+p.group(2)
+			line=str(cnt)+rest
+		# the next few lines are added for a special case
+		# when a number appears inside the list
+		# then that number is assumed to be part of the next list item
+		p2=re.match(r'\A([\D]*)(\d+.*)\Z',rest)
+		if p2:
+			line=str(cnt)+p2.group(1)
+			print(line)
+			line=p2.group(2)
+			return checkLine(line, cnt)
 	
 	return line, cnt
 
