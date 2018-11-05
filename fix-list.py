@@ -26,6 +26,8 @@ def checkLine(line, cnt):
 				rest=rest[1:]
 			if(rest[0] == ' '):
 				rest=rest[1:]
+			while(not rest[0].isalpha()):
+				rest=rest[1:]
 			rest=rest.title() #replace with rest.capitalize() in the future
 			line = p.group(1)+add+rest
 			return checkLine(line, cnt-1)
@@ -41,7 +43,7 @@ def checkLine(line, cnt):
 		p2=re.match(r'\A([\D]*)(\d+.*)\Z',rest)
 		if p2:
 			line=str(cnt)+p2.group(1)
-			print(line)
+			print(line.strip())
 			line=p2.group(2)
 			return checkLine(line, cnt)
 	
